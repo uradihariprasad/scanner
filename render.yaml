@@ -1,0 +1,23 @@
+databases:
+  - name: momentum-scanner-db
+    databaseName: app_db
+    user: postgres
+    plan: free
+
+services:
+  - type: web
+    name: momentum-scanner
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: momentum-scanner-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
